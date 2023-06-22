@@ -72,6 +72,7 @@ namespace Disconnecter_Environment
         private void btnSave_Click(object sender, EventArgs e)
         {
             string nmProdi = nmp.Text;
+            string idProdi = idp.Text;
 
             if (nmProdi == "")
             {
@@ -80,10 +81,11 @@ namespace Disconnecter_Environment
             else
             {
                 koneksi.Open();
-                string str = "insert into dbo.Prodi (nama_prodi)" + "values(@id)";
+                string str = "insert into dbo.Prodi (id_prodi,nama_prodi)" + "values(@id_prodi, @nama_prodi)";
                 SqlCommand cmd = new SqlCommand(str, koneksi);
                 cmd.CommandType = CommandType.Text;
-                cmd.Parameters.Add(new SqlParameter("id", nmProdi));
+                cmd.Parameters.Add(new SqlParameter("id_prodi", idProdi));
+                cmd.Parameters.Add(new SqlParameter("nama_prodi", nmProdi));
                 cmd.ExecuteNonQuery();
 
                 koneksi.Close();
@@ -104,5 +106,6 @@ namespace Disconnecter_Environment
             hu.Show();
             this.Hide();
         }
+
     }
 }

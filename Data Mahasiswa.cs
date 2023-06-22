@@ -20,25 +20,23 @@ namespace Disconnecter_Environment
     
     public partial class Data_Mahasiswa : Form
     {
-        public Data_Mahasiswa()
-        {
-            InitializeComponent();
-            koneksi = new SqlConnection(StringConnection);
-            this.bnMahasiswa.BindingSource = this.customersBindingSource;
-            refreshform();
-        }
-
-        private string StringConnection = "Data Source = MAULAGHANI\\GHANI;" + "database=actpabd;User ID=sa;Password=Anjingan20.";
+        private string stringConnection = "Data Source = MAULAGHANI\\GHANI;" + "database=actpabd;User ID=sa;Password=Anjingan20.";
         private SqlConnection koneksi;
         private string nim, nama, alamat, jk, prodi;
         private DateTime tgl;
-        BindingSource customersBindingSource = new BindingSource();
+        private BindingSource CustomerBindingSource;
 
+        public Data_Mahasiswa()
+        {
+            InitializeComponent();
+            koneksi = new SqlConnection(stringConnection);
+            CustomerBindingSource = new BindingSource();
+            refreshform();
+        }
+
+       
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            txtNIM.Text = "";
-            txtNama.Text = "";
-            txtAlamat.Text = "";
             dtTanggalLahir.Value = DateTime.Today;
             txtNIM.Enabled = true;
             txtNama.Enabled = true;
@@ -59,85 +57,67 @@ namespace Disconnecter_Environment
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            nim = txtNIM.Text;
-            nama = txtNama.Text;
-            jk = cbxJenisKelamin.Text;
-            alamat = txtAlamat.Text;
+            nim = txtNIM.Text.Trim();
+            nama = txtNama.Text.Trim();
+            alamat = txtAlamat.Text.Trim();
+            jk = cbxJenisKelamin.SelectedItem.ToString();
+            prodi = cbxProdi.SelectedValue.ToString();
             tgl = dtTanggalLahir.Value;
-            prodi = cbxProdi.Text;
-            int hs = 0;
-            koneksi.Open();
-            string strs = "select id_prodi from dbo.prodi where nama_prodi = @dd";
-            SqlCommand cm = new SqlCommand(strs, koneksi);
-            cm.CommandType = CommandType.Text;
-            cm.Parameters.Add(new SqlParameter("@dd", prodi));
-            SqlDataReader dr = cm.ExecuteReader();
-            while (dr.Read())
+            if (string.IsNullOrEmpty(nim) || string.IsNullOrEmpty(nama) || string.IsNullOrEmpty(alamat) || string.IsNullOrEmpty(jk) || string.IsNullOrEmpty(prodi))
             {
-                hs = int.Parse(dr["id_prodi"].ToString());
+                MessageBox.Show("Please fill in all identity fields!");
             }
-            dr.Close();
-            string str = "insert into dbo.Mahasiwa (nim, nama_mahasiswa, jenis_kel, alamat, tgl_lahir, id_prodi)" + "values(@NIM, @Nm, @Jk, @Al, @Tgll, @Idp";
-            SqlCommand cmd = new SqlCommand(str, koneksi);
-            cmd.CommandType = CommandType.Text;
-            cmd.Parameters.Add(new SqlParameter("NIM", nim));
-            cmd.Parameters.Add(new SqlParameter("Nm", nama));
-            cmd.Parameters.Add(new SqlParameter("Jk", jk));
-            cmd.Parameters.Add(new SqlParameter("AL", alamat));
-            cmd.Parameters.Add(new SqlParameter("Tgll", tgl));
-            cmd.Parameters.Add(new SqlParameter("Idp", hs));
-            cmd.ExecuteNonQuery();
+            else
+            {
+                koneksi.Open();
+                string str = "INSERT INTO mahasiswa (nim, nama_mahasiswa, alamat, jenis_kelamin, id_prodi, tgl_lahir) VALUES (@nim, @nama_mahasiswa, @alamat, @jenis_kelamin, @id_prodi, @tgl_lahir)";
+                SqlCommand cmd = new SqlCommand(str, koneksi);
+                cmd.Parameters.AddWithValue("@nim", nim);
+                cmd.Parameters.AddWithValue("@nama_mahasiswa", nama);
+                cmd.Parameters.AddWithValue("@jenis_kelamin", jk);
+                cmd.Parameters.AddWithValue("@alamat", alamat);
+                cmd.Parameters.AddWithValue("@tgl_lahir", tgl);
+                cmd.Parameters.AddWithValue("@id_prodi", prodi);
+                cmd.ExecuteNonQuery();
 
-            koneksi.Close();
+                koneksi.Close();
 
-            MessageBox.Show("Data Berhasil Disimpan", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Data Berhasil Disimpan");
+            }
 
-            refreshform();
+
         }
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            refreshform();
+            txtNIM.Text = "";
+            txtNama.Text = "";
+            txtAlamat.Text = "";
+            cbxJenisKelamin.SelectedIndex = -1;
+            cbxProdi.SelectedIndex = -1;
+            dtTanggalLahir.Value = DateTime.Now;
         }
 
         private void Prodicbx()
         {
             koneksi.Open();
-            string StringConnection = "select nama_prodi from dbo.Prodi";
+            string StringConnection = "select id_prodi, nama_prodi from dbo.Prodi";
             SqlCommand cmd = new SqlCommand(StringConnection, koneksi);
-            SqlDataAdapter da = new SqlDataAdapter(StringConnection, koneksi);
-            DataSet ds = new DataSet();
-            da.Fill(ds);
-            cmd.ExecuteReader();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
             koneksi.Close();
             cbxProdi.DisplayMember = "nama_prodi";
             cbxProdi.ValueMember = "id_prodi";
-            cbxProdi.DataSource = ds.Tables[0];
+            cbxProdi.DataSource = dt;
         }
         private void Data_Mahasiswa_Load(object sender, EventArgs e)
         {
            
         }
 
-        private void Data_Mahasiswa_Load()
-        {
-            koneksi.Open();
-            SqlDataAdapter dataAdapter1 = new SqlDataAdapter(new SqlCommand("Select m.nim, m.nama_mahasiswa," + "m.alamat, m.jenis_kel, m.tgl_lahir,p.nama_prodi From dbo.Mahasiswa m " + "join dbo.Prodi p on m.id_prodi = p.id_prodi", koneksi));
-            DataSet ds = new DataSet();
-            dataAdapter1.Fill(ds);
-
-            this.customersBindingSource.DataSource = ds.Tables[0];
-            this.txtNIM.DataBindings.Add(
-                new Binding("Text", this.customersBindingSource, "NIM", true));
-            this.txtNama.DataBindings.Add(
-                new Binding("Text", this.customersBindingSource, "nama_mahasiswa", true));
-            this.txtAlamat.DataBindings.Add(
-                new Binding("Text", this.customersBindingSource, "alamat", true));
-            this.cbxJenisKelamin.DataBindings.Add(new Binding("Text", this.customersBindingSource, "jenis_kel", true));
-            this.dtTanggalLahir.DataBindings.Add(new Binding("Text", this.customersBindingSource, "tgl_lahir", true));
-            this.cbxProdi.DataBindings.Add(new Binding("Text", this.customersBindingSource, "nama_prod", true));
-            koneksi.Close();
-        }
+        
         private void clearBinding()
         {
             this.txtNIM.DataBindings.Clear();
@@ -159,7 +139,6 @@ namespace Disconnecter_Environment
             btnSave.Enabled = false;
             btnClear.Enabled = false;
             clearBinding();
-            Data_Mahasiswa_Load();
         }
         private void Data_Mahasiswa_FormClosed(object sender, FormClosedEventArgs e)
         {

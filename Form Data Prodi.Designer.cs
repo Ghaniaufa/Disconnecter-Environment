@@ -34,6 +34,8 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.idp = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.nmp = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -59,7 +61,7 @@
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(474, 190);
+            this.btnAdd.Location = new System.Drawing.Point(468, 216);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(75, 36);
             this.btnAdd.TabIndex = 2;
@@ -69,7 +71,7 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(300, 237);
+            this.btnSave.Location = new System.Drawing.Point(294, 263);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 34);
             this.btnSave.TabIndex = 3;
@@ -79,7 +81,7 @@
             // 
             // btnClear
             // 
-            this.btnClear.Location = new System.Drawing.Point(381, 237);
+            this.btnClear.Location = new System.Drawing.Point(375, 263);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(75, 34);
             this.btnClear.TabIndex = 4;
@@ -90,18 +92,34 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(226, 202);
+            this.label1.Location = new System.Drawing.Point(220, 201);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(62, 13);
             this.label1.TabIndex = 5;
             this.label1.Text = "Nama Prodi";
             // 
+            // idp
+            // 
+            this.idp.Location = new System.Drawing.Point(288, 232);
+            this.idp.Name = "idp";
+            this.idp.Size = new System.Drawing.Size(174, 20);
+            this.idp.TabIndex = 6;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(220, 235);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(45, 13);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "ID Prodi";
+            // 
             // nmp
             // 
-            this.nmp.Location = new System.Drawing.Point(294, 199);
+            this.nmp.Location = new System.Drawing.Point(288, 201);
             this.nmp.Name = "nmp";
             this.nmp.Size = new System.Drawing.Size(174, 20);
-            this.nmp.TabIndex = 6;
+            this.nmp.TabIndex = 8;
             // 
             // Form_Data_Prodi
             // 
@@ -109,6 +127,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.nmp);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.idp);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnSave);
@@ -132,6 +152,8 @@
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox idp;
+        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox nmp;
     }
 }
